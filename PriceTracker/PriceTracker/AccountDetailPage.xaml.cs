@@ -181,5 +181,20 @@ namespace PriceTracker
         {
             await Navigation.PushAsync(new AccountHistoryPage(_account));
         }
+
+        private async void OnRemoveCardClicked(object sender, EventArgs e)
+        {
+            if (sender is Button btn && btn.CommandParameter is Card card)
+            {
+                bool confirm = await DisplayAlert("Remove Card", $"Are you sure you want to remove '{card.CardName}'?", "Yes", "Cancel");
+                if (!confirm) return;
+
+                _account.InBinder.Remove(card);
+                RefreshBinder();
+
+                if (AppData.SaveAccounts != null)
+                    await AppData.SaveAccounts.Invoke();
+            }
+        }
     }
 }

@@ -16,6 +16,7 @@
 
             <!-- Card List -->
             <Label Text="Binder Cards:" FontSize="20" />
+            <Label Text="Prices may not be accurate" FontSize="16" />
             <CollectionView x:Name="BinderListView">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
@@ -25,7 +26,10 @@
                                 <Label Text="{Binding SetNumber}" FontSize="14" />
                                 <Label Text="{Binding Rarity}" FontSize="14" />
                                 <Label Text="{Binding Price, StringFormat='Price: ${0}'}" FontSize="14" TextColor="Green"/>
-                                <Button Text="Sell" Clicked="OnSellCardClicked" CommandParameter="{Binding}" />
+                                <HorizontalStackLayout Spacing="10">
+                                    <Button Text="Sell" Clicked="OnSellCardClicked" CommandParameter="{Binding}" />
+                                    <Button Text="Remove" Clicked="OnRemoveCardClicked" CommandParameter="{Binding}" BackgroundColor="Crimson" TextColor="White"/>
+                                </HorizontalStackLayout>
                             </StackLayout>
                         </Frame>
                     </DataTemplate>

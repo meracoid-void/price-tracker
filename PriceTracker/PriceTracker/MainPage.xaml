@@ -8,11 +8,9 @@
 
             <Label Text="Add New Account" FontSize="20" />
 
-            <Entry x:Name="AccountNameEntry"
-           Placeholder="Enter account name" />
-
-            <Button Text="Add Account"
-            Clicked="OnAddAccountClicked" />
+            <Entry x:Name="AccountNameEntry" Placeholder="Enter account name" />
+            <Entry x:Name="StartingCreditEntry" Placeholder="Enter starting credit" Keyboard="Numeric" />
+            <Button Text="Add Account" Clicked="OnAddAccountClicked" />
 
             <Label Text="Accounts" FontSize="20" />
 

@@ -92,6 +92,7 @@ namespace PriceTracker
         private async void OnAddAccountClicked(object sender, EventArgs e)
         {
             string name = AccountNameEntry.Text?.Trim();
+            string creditText = StartingCreditEntry.Text?.Trim();
 
             if (string.IsNullOrWhiteSpace(name))
             {
@@ -99,10 +100,16 @@ namespace PriceTracker
                 return;
             }
 
+            if (!double.TryParse(creditText, out double startingCredit))
+            {
+                await DisplayAlert("Invalid Input", "Starting credit must be a valid number. Will set credit to 0", "OK");
+                startingCredit = 0;
+            }
+
             var newAccount = new Account
             {
                 Name = name,
-                Credit = 0.0,
+                Credit = startingCredit,
                 InBinder = new List<Card>(),
                 BuyHistory = new List<Card>(),
                 SellHistory = new List<Card>()
@@ -113,11 +120,11 @@ namespace PriceTracker
             if (AppData.SaveAccounts != null)
                 await AppData.SaveAccounts.Invoke();
 
-            // Refresh the ListView or CollectionView you’re using
             AccountsListView.ItemsSource = null;
             AccountsListView.ItemsSource = AppData.Accounts;
 
             AccountNameEntry.Text = string.Empty;
+            StartingCreditEntry.Text = string.Empty;
         }
 
         void OnAccountSelected(object sender, SelectionChangedEventArgs e)
