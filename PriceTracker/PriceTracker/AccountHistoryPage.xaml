@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PriceTracker.AccountHistoryPage"
+             Title="Buy/Sell History">
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="15">
+
+            <Label Text="Buy History" FontAttributes="Bold" FontSize="20" />
+            <CollectionView x:Name="BuyHistoryListView" HeightRequest="200">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <StackLayout>
+                            <Label Text="{Binding CardName}" />
+                            <Label Text="{Binding SetNumber}" />
+                            <Label Text="{Binding Rarity}" />
+                            <Label Text="{Binding Price, StringFormat='Price: ${0}'}" TextColor="Green" />
+                        </StackLayout>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <Label Text="Sell History" FontAttributes="Bold" FontSize="20" Margin="0,20,0,0" />
+            <CollectionView x:Name="SellHistoryListView" HeightRequest="200">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <StackLayout>
+                            <Label Text="{Binding CardName}" />
+                            <Label Text="{Binding SetNumber}" />
+                            <Label Text="{Binding Rarity}" />
+                            <Label Text="{Binding Price, StringFormat='Price: ${0}'}" TextColor="Red" />
+                        </StackLayout>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

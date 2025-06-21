@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PriceTracker.AccountDetailPage">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="15">
+            <Label x:Name="NameLabel" FontSize="24" FontAttributes="Bold"/>
+            <Label x:Name="CreditLabel" FontSize="18" />
+            <Button Text="View Buy/Sell History" Clicked="OnViewHistoryClicked" />
+
+            <!-- Add Card Section -->
+            <Label Text="Add Card to Binder" FontSize="20" />
+            <Entry x:Name="CardNameEntry" Placeholder="Enter card name" />
+            <Button Text="Add Card" Clicked="OnAddCardClicked" />
+
+            <!-- Card List -->
+            <Label Text="Binder Cards:" FontSize="20" />
+            <CollectionView x:Name="BinderListView">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame BorderColor="Gray" Padding="10" Margin="5">
+                            <StackLayout>
+                                <Label Text="{Binding CardName}" FontSize="16" />
+                                <Label Text="{Binding SetNumber}" FontSize="14" />
+                                <Label Text="{Binding Rarity}" FontSize="14" />
+                                <Label Text="{Binding Price, StringFormat='Price: ${0}'}" FontSize="14" TextColor="Green"/>
+                                <Button Text="Sell" Clicked="OnSellCardClicked" CommandParameter="{Binding}" />
+                            </StackLayout>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

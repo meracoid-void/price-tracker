@@ -1,15 +1,17 @@
-﻿namespace PriceTracker
+﻿using PriceTracker.Models;
+namespace PriceTracker
 {
     public partial class App : Application
     {
         public App()
         {
             InitializeComponent();
+            MainPage = new NavigationPage(new MainPage());
         }
 
-        protected override Window CreateWindow(IActivationState? activationState)
+        protected override void OnSleep()
         {
-            return new Window(new AppShell());
+            AppData.SaveAccounts?.Invoke();
         }
     }
 }
