@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using PriceTracker.Services;
 
 namespace PriceTracker
 {
@@ -14,10 +15,13 @@ namespace PriceTracker
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
-
+#if ANDROID
+            builder.Services.AddSingleton<PriceTracker.Services.IFileService, PriceTracker.Platforms.Android.AndroidFileService>();
+#endif
 #if DEBUG
     		builder.Logging.AddDebug();
 #endif
+            builder.Services.AddSingleton<ExportService>();
 
             return builder.Build();
         }

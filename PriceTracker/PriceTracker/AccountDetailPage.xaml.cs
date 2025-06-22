@@ -8,8 +8,9 @@ namespace PriceTracker
     {
         private readonly CardService _cardService = new();
         private Account _account;
+        private ExportService _exportService;
 
-        public AccountDetailPage(Account account)
+        public AccountDetailPage(Account account, ExportService exportService)
         {
             InitializeComponent();
             _account = account;
@@ -19,6 +20,8 @@ namespace PriceTracker
             CreditLabel.Text = $"Credit: ${_account.Credit ?? 0:F2}";
 
             BinderListView.ItemsSource = _account.InBinder;
+
+            _exportService = exportService;
 
             _ = UpdateCardPricesAsync(); // fire-and-forget
         }
@@ -195,6 +198,12 @@ namespace PriceTracker
                 if (AppData.SaveAccounts != null)
                     await AppData.SaveAccounts.Invoke();
             }
+        }
+
+        private async void OnExportAccountClicked(object sender, EventArgs e)
+        {
+            var filePath = await _exportService.ExportAccountToCsvAsync(_account);
+            await DisplayAlert("Exported", $"Saved to Downloads:\n{filePath}", "OK");
         }
     }
 }

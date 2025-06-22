@@ -1,4 +1,5 @@
 ﻿using PriceTracker.Models;
+using PriceTracker.Services;
 using System.Text.Json;
 
 namespace PriceTracker
@@ -7,10 +8,12 @@ namespace PriceTracker
     {
         private static readonly string FilePath = Path.Combine(FileSystem.AppDataDirectory, "accounts.json");
         private List<Account> _accounts;
+        private ExportService _exportService;
 
-        public MainPage()
+        public MainPage(ExportService exportService)
         {
             InitializeComponent();
+            _exportService = exportService;
         }
 
         protected override async void OnAppearing()
@@ -132,7 +135,7 @@ namespace PriceTracker
             if (e.CurrentSelection.FirstOrDefault() is Account selectedAccount)
             {
                 // Navigate to detail page
-                Navigation.PushAsync(new AccountDetailPage(selectedAccount));
+                Navigation.PushAsync(new AccountDetailPage(selectedAccount, _exportService));
                 AccountsListView.SelectedItem = null; // clear selection
             }
         }

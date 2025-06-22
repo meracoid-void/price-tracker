@@ -7,6 +7,7 @@
         <VerticalStackLayout Padding="20" Spacing="15">
             <Label x:Name="NameLabel" FontSize="24" FontAttributes="Bold"/>
             <Label x:Name="CreditLabel" FontSize="18" />
+            <Button Text="Export This Account to Excel" Clicked="OnExportAccountClicked" />
             <Button Text="View Buy/Sell History" Clicked="OnViewHistoryClicked" />
 
             <!-- Add Card Section -->

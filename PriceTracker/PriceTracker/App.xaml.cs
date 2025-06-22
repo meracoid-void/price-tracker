@@ -1,12 +1,15 @@
 ﻿using PriceTracker.Models;
+using PriceTracker.Services;
 namespace PriceTracker
 {
     public partial class App : Application
     {
-        public App()
+        private ExportService _exportService;
+        public App(ExportService exportService)
         {
             InitializeComponent();
-            MainPage = new NavigationPage(new MainPage());
+            _exportService = exportService;
+            MainPage = new NavigationPage(new MainPage(_exportService));
         }
 
         protected override void OnSleep()
