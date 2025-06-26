@@ -157,5 +157,10 @@ namespace PriceTracker
             AccountsListView.ItemsSource = null;
             AccountsListView.ItemsSource = AppData.Accounts;
         }
+
+        private async void OnGlobalSearchClicked(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new GlobalSearchPage());
+        }
     }
 }

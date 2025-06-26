@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PriceTracker.GlobalSearchPage"
+             Title="Search All Binders">
+
+    <VerticalStackLayout Padding="20" Spacing="10">
+        <Entry x:Name="SearchEntry" Placeholder="Enter card name..." />
+        <Button Text="Search" Clicked="OnSearchClicked" />
+
+        <CollectionView x:Name="SearchResultsView">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame BorderColor="Gray" Margin="5" Padding="10">
+                        <VerticalStackLayout>
+                            <Label Text="{Binding CardName}" FontSize="16" />
+                            <Label FontSize="14">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="Rarity: " />
+                                        <Span Text="{Binding Rarity}" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+
+                            <Label FontSize="14">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="Price: $" />
+                                        <Span Text="{Binding Price}" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+
+                            <Label FontSize="14">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="Set: " />
+                                        <Span Text="{Binding SetNumber}" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+
+                            <Label FontSize="14" TextColor="Gray">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="Owner: " />
+                                        <Span Text="{Binding Owner}" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                            <Button Text="Sell"
+                                TextColor="DarkRed"
+                                CommandParameter="{Binding}"
+                                Clicked="OnSellCardClicked" />
+                        </VerticalStackLayout>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </VerticalStackLayout>
+</ContentPage>

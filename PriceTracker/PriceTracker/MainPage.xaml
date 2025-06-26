@@ -6,6 +6,8 @@
     <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="15">
 
+            <Button Text="Search All Binders" Clicked="OnGlobalSearchClicked" />
+
             <Label Text="Add New Account" FontSize="20" />
 
             <Entry x:Name="AccountNameEntry" Placeholder="Enter account name" />
