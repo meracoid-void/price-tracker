@@ -7,8 +7,13 @@
         <VerticalStackLayout Padding="20" Spacing="15">
             <Label x:Name="NameLabel" FontSize="24" FontAttributes="Bold"/>
             <Label x:Name="CreditLabel" FontSize="18" />
+            <HorizontalStackLayout Spacing="10">
+                <Button Text="Add Credit" Clicked="OnAddCreditClicked" />
+                <Button Text="Remove Credit" Clicked="OnRemoveCreditClicked" />
+            </HorizontalStackLayout>
             <Button Text="Export This Account to Excel" Clicked="OnExportAccountClicked" />
             <Button Text="View Buy/Sell History" Clicked="OnViewHistoryClicked" />
+            <Button Text="Buy Card (Not from another account)" Clicked="OnBuyFromShopClicked" />
 
             <!-- Add Card Section -->
             <Label Text="Add Card to Binder" FontSize="20" />

@@ -7,7 +7,6 @@ namespace PriceTracker
     public partial class MainPage : ContentPage
     {
         private static readonly string FilePath = Path.Combine(FileSystem.AppDataDirectory, "accounts.json");
-        private List<Account> _accounts;
         private ExportService _exportService;
 
         public MainPage(ExportService exportService)
@@ -29,8 +28,7 @@ namespace PriceTracker
                 AppData.SaveAccounts = async () => await SaveAccountsToFileAsync(AppData.Accounts);
             }
 
-            AccountsListView.ItemsSource = null;
-            AccountsListView.ItemsSource = AppData.Accounts;
+            RefreshAccountList();
 
             AppData.SaveAccounts = async () => await SaveAccountsToFileAsync(AppData.Accounts);
 
@@ -130,14 +128,34 @@ namespace PriceTracker
             StartingCreditEntry.Text = string.Empty;
         }
 
-        void OnAccountSelected(object sender, SelectionChangedEventArgs e)
+        private async void OnViewAccountClicked(object sender, EventArgs e)
         {
-            if (e.CurrentSelection.FirstOrDefault() is Account selectedAccount)
+            if (sender is Button button && button.CommandParameter is Account account)
             {
-                // Navigate to detail page
-                Navigation.PushAsync(new AccountDetailPage(selectedAccount, _exportService));
-                AccountsListView.SelectedItem = null; // clear selection
+                await Navigation.PushAsync(new AccountDetailPage(account, _exportService));
             }
+        }
+
+        private async void OnDeleteAccountClicked(object sender, EventArgs e)
+        {
+            if (sender is Button button && button.CommandParameter is Account account)
+            {
+                bool confirm = await DisplayAlert("Delete Account",
+                    $"Are you sure you want to delete '{account.Name}'?",
+                    "Yes", "Cancel");
+
+                if (!confirm) return;
+
+                AppData.Accounts.Remove(account);
+                await AppData.SaveAccounts.Invoke();
+                RefreshAccountList();
+            }
+        }
+
+        private void RefreshAccountList()
+        {
+            AccountsListView.ItemsSource = null;
+            AccountsListView.ItemsSource = AppData.Accounts;
         }
     }
 }

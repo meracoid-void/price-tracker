@@ -31,6 +31,8 @@ namespace PriceTracker
             CardNameEntry.Text = string.Empty;
             BinderListView.ItemsSource = null;
             BinderListView.ItemsSource = _account.InBinder;
+            NameLabel.Text = $"Name: {_account.Name}";
+            CreditLabel.Text = $"Credit: ${_account.Credit ?? 0:F2}";
         }
 
         private async void OnAddCardClicked(object sender, EventArgs e)
@@ -204,6 +206,107 @@ namespace PriceTracker
         {
             var filePath = await _exportService.ExportAccountToCsvAsync(_account);
             await DisplayAlert("Exported", $"Saved to Downloads:\n{filePath}", "OK");
+        }
+
+        private async void OnAddCreditClicked(object sender, EventArgs e)
+        {
+            string amountStr = await DisplayPromptAsync("Add Credit", "How much credit to add?", "OK", "Cancel", keyboard: Keyboard.Numeric);
+
+            if (!double.TryParse(amountStr, out double amount) || amount <= 0)
+            {
+                await DisplayAlert("Invalid Input", "Please enter a positive number.", "OK");
+                return;
+            }
+
+            _account.Credit = (_account.Credit ?? 0) + amount;
+            CreditLabel.Text = $"Credit: ${_account.Credit:F2}";
+
+            if (AppData.SaveAccounts != null)
+            {
+                await AppData.SaveAccounts.Invoke();
+            }
+        }
+
+        private async void OnRemoveCreditClicked(object sender, EventArgs e)
+        {
+            string amountStr = await DisplayPromptAsync("Remove Credit", "How much credit to subtract?", "OK", "Cancel", keyboard: Keyboard.Numeric);
+
+            if (!double.TryParse(amountStr, out double amount) || amount <= 0)
+            {
+                await DisplayAlert("Invalid Input", "Please enter a positive number.", "OK");
+                return;
+            }
+
+            _account.Credit = (_account.Credit ?? 0) - amount;
+            CreditLabel.Text = $"Credit: ${_account.Credit:F2}";
+
+            if (AppData.SaveAccounts != null)
+            {
+                await AppData.SaveAccounts.Invoke();
+            }
+        }
+
+        private async void OnBuyFromShopClicked(object sender, EventArgs e)
+        {
+            string cardName = await DisplayPromptAsync("Buy Card", "Enter card name: (Optional)");
+            if (!String.IsNullOrEmpty(cardName))
+            {
+                // Call your API fetch method
+                var apiResult = await _cardService.GetCardDataAsync(cardName);
+                if (apiResult == null || apiResult.card_sets.Count == 0)
+                {
+                    await DisplayAlert("Error", "Card not found.", "OK");
+                    return;
+                }
+
+                // Let user choose the version/set
+                var choices = apiResult.card_sets.Select(set => $"{set.set_code} - {set.set_rarity}").ToArray();
+                string chosen = await DisplayActionSheet("Select Card Version", "Cancel", null, choices);
+                if (chosen == null || chosen == "Cancel")
+                {
+                    return;
+                }
+
+                // Prompt for purchase price
+                string inputPrice = await DisplayPromptAsync("Price Paid", "How much did this cost?", "Submit", keyboard: Keyboard.Numeric);
+                if (!double.TryParse(inputPrice, out double paid)) paid = 0.0;
+
+                var selectedSet = apiResult.card_sets.FirstOrDefault(set =>
+                    $"{set.set_code} - {set.set_rarity}" == chosen);
+
+                // Add to binder and buy history
+                var chosenCard = new Card()
+                {
+                    CardName = cardName,
+                    SetNumber = selectedSet.set_code,
+                    Price = paid,
+                    Rarity = selectedSet.set_rarity
+                };
+                _account.BuyHistory.Add(chosenCard);
+
+                // Subtract credit
+                _account.Credit -= paid;
+            }
+            else
+            {
+                string inputPrice = await DisplayPromptAsync("Price Paid", "How much did this cost?", "Submit", keyboard: Keyboard.Numeric);
+                if (!double.TryParse(inputPrice, out double paid)) paid = 0.0;
+                var chosenCard = new Card()
+                {
+                    CardName = "N/A",
+                    SetNumber = "N/A",
+                    Price = paid,
+                    Rarity = "N/A"
+                };
+                _account.BuyHistory.Add(chosenCard);
+
+                // Subtract credit
+                _account.Credit -= paid;
+            }
+
+
+                await AppData.SaveAccounts.Invoke();
+            RefreshBinder();
         }
     }
 }
