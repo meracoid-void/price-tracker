@@ -9,8 +9,9 @@ namespace PriceTracker
         private readonly CardService _cardService = new();
         private Account _account;
         private ExportService _exportService;
+        private ITextRecognitionService _ocrService;
 
-        public AccountDetailPage(Account account, ExportService exportService)
+        public AccountDetailPage(Account account, ExportService exportService, ITextRecognitionService ocrService)
         {
             InitializeComponent();
             _account = account;
@@ -22,6 +23,7 @@ namespace PriceTracker
             BinderListView.ItemsSource = _account.InBinder;
 
             _exportService = exportService;
+            _ocrService = ocrService;
 
             _ = UpdateCardPricesAsync(); // fire-and-forget
         }
@@ -322,8 +324,7 @@ namespace PriceTracker
                 await stream.CopyToAsync(ms);
                 var bytes = ms.ToArray();
 
-                var ocrService = DependencyService.Get<ITextRecognitionService>();
-                var scannedText = await ocrService.RecognizeTextAsync(bytes);
+                var scannedText = await _ocrService.RecognizeTextAsync(bytes);
 
                 if (string.IsNullOrWhiteSpace(scannedText))
                 {

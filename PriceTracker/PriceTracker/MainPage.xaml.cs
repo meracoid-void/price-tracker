@@ -8,11 +8,13 @@ namespace PriceTracker
     {
         private static readonly string FilePath = Path.Combine(FileSystem.AppDataDirectory, "accounts.json");
         private ExportService _exportService;
+        private ITextRecognitionService _ocrService;
 
-        public MainPage(ExportService exportService)
+        public MainPage(ExportService exportService, ITextRecognitionService ocrService)
         {
             InitializeComponent();
             _exportService = exportService;
+            _ocrService = ocrService;
         }
 
         protected override async void OnAppearing()
@@ -132,7 +134,7 @@ namespace PriceTracker
         {
             if (sender is Button button && button.CommandParameter is Account account)
             {
-                await Navigation.PushAsync(new AccountDetailPage(account, _exportService));
+                await Navigation.PushAsync(new AccountDetailPage(account, _exportService, _ocrService));
             }
         }
 

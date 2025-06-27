@@ -5,11 +5,13 @@ namespace PriceTracker
     public partial class App : Application
     {
         private ExportService _exportService;
-        public App(ExportService exportService)
+        private ITextRecognitionService _ocrService;
+        public App(ExportService exportService, ITextRecognitionService ocrService)
         {
             InitializeComponent();
             _exportService = exportService;
-            MainPage = new NavigationPage(new MainPage(_exportService));
+            _ocrService = ocrService;
+            MainPage = new NavigationPage(new MainPage(_exportService, _ocrService));
         }
 
         protected override void OnSleep()

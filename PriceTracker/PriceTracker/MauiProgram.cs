@@ -17,6 +17,7 @@ namespace PriceTracker
                 });
 #if ANDROID
             builder.Services.AddSingleton<PriceTracker.Services.IFileService, PriceTracker.Platforms.Android.AndroidFileService>();
+            builder.Services.AddSingleton<ITextRecognitionService, PriceTracker.Platforms.Android.AndroidTextRecognitionService>();
 #endif
 #if DEBUG
     		builder.Logging.AddDebug();
