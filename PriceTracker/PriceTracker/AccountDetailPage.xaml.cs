@@ -308,5 +308,50 @@ namespace PriceTracker
                 await AppData.SaveAccounts.Invoke();
             RefreshBinder();
         }
+
+        private async void OnScanCardWithCameraClicked(object sender, EventArgs e)
+        {
+            try
+            {
+                var photo = await MediaPicker.CapturePhotoAsync();
+                if (photo == null)
+                    return;
+
+                using var stream = await photo.OpenReadAsync();
+                using var ms = new MemoryStream();
+                await stream.CopyToAsync(ms);
+                var bytes = ms.ToArray();
+
+                var ocrService = DependencyService.Get<ITextRecognitionService>();
+                var scannedText = await ocrService.RecognizeTextAsync(bytes);
+
+                if (string.IsNullOrWhiteSpace(scannedText))
+                {
+                    await DisplayAlert("No Text Found", "Could not detect text from image.", "OK");
+                    return;
+                }
+
+                // Try to clean up OCR result — use first line only
+                var firstLine = scannedText.Split('\n', StringSplitOptions.RemoveEmptyEntries).FirstOrDefault()?.Trim();
+                if (string.IsNullOrWhiteSpace(firstLine))
+                {
+                    await DisplayAlert("Invalid Scan", "Couldn't read a valid card name.", "OK");
+                    return;
+                }
+
+                // Optionally: Ask user to confirm or edit
+                string confirmedCardName = await DisplayPromptAsync("Confirm Card Name", "Edit or confirm the scanned card name:", initialValue: firstLine);
+                if (string.IsNullOrWhiteSpace(confirmedCardName))
+                    return;
+
+                // Use your existing flow to fetch card from YGO API
+                CardNameEntry.Text = confirmedCardName;
+                OnAddCardClicked(null, EventArgs.Empty); // reuse existing add logic
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Error", ex.Message, "OK");
+            }
+        }
     }
 }

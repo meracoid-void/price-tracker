@@ -14,6 +14,7 @@
             <Button Text="Export This Account to Excel" Clicked="OnExportAccountClicked" />
             <Button Text="View Buy/Sell History" Clicked="OnViewHistoryClicked" />
             <Button Text="Buy Card (Not from another account)" Clicked="OnBuyFromShopClicked" />
+            <Button Text="📷 Scan Card with Camera" Clicked="OnScanCardWithCameraClicked"/>
 
             <!-- Add Card Section -->
             <Label Text="Add Card to Binder" FontSize="20" />
