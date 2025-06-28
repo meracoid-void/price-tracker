@@ -89,7 +89,16 @@ namespace PriceTracker
                 Price = price
             };
 
-            _account.InBinder.Add(newCard);
+            string qtyInput = await DisplayPromptAsync("Quantity", "How many copies do you want to add?", "Add", "Cancel", "1", keyboard: Keyboard.Numeric);
+            if (!int.TryParse(qtyInput, out int quantity) || quantity <= 0)
+            {
+                quantity = 1;
+            }
+
+            for (int i = 0; i < quantity; i++)
+            {
+                _account.InBinder.Add(newCard);
+            }
             RefreshBinder();
 
             if (AppData.SaveAccounts != null)
